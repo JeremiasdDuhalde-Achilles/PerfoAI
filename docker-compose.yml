@@ -51,6 +51,8 @@ services:
         condition: service_healthy
     command: >
       sh -c "
+        echo 'Installing dependencies...' &&
+        pip install --no-cache-dir -r requirements.txt &&
         echo 'Waiting for database...' &&
         sleep 5 &&
         echo 'Initializing database...' &&
