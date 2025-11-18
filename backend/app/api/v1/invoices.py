@@ -155,7 +155,7 @@ def update_invoice(
     invoice_id: int,
     invoice_data: InvoiceUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_role(["admin", "finance_manager", "approver"])
+    current_user: User = Depends(require_role(["admin", "finance_manager", "approver"]))
 ):
     """
     Update invoice.
