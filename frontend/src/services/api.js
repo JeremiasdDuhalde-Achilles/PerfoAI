@@ -42,8 +42,12 @@ export const authAPI = {
   register: (userData) =>
     api.post('/api/v1/auth/register', userData),
 
-  getCurrentUser: () =>
-    api.get('/api/v1/auth/me'),
+  getCurrentUser: (token) => {
+    const config = token ? {
+      headers: { Authorization: `Bearer ${token}` }
+    } : {};
+    return api.get('/api/v1/auth/me', config);
+  },
 };
 
 // Invoices API

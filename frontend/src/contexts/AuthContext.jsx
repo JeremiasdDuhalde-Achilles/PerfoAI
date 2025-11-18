@@ -31,10 +31,11 @@ export const AuthProvider = ({ children }) => {
       const response = await authAPI.login(username, password);
       const { access_token } = response.data;
 
+      // Save token first
       localStorage.setItem('token', access_token);
 
-      // Get user info
-      const userResponse = await authAPI.getCurrentUser();
+      // Get user info with explicit token header to avoid timing issues
+      const userResponse = await authAPI.getCurrentUser(access_token);
       const userData = userResponse.data;
 
       localStorage.setItem('user', JSON.stringify(userData));
@@ -42,6 +43,7 @@ export const AuthProvider = ({ children }) => {
 
       return { success: true };
     } catch (error) {
+      console.error('Login error:', error);
       return {
         success: false,
         error: error.response?.data?.detail || 'Login failed',
