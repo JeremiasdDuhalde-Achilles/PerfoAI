@@ -60,28 +60,29 @@ def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ) -> User:
-    """Get the current authenticated user."""
-    payload = decode_access_token(token)
-    user_id: int = payload.get("sub")
+    """Get the current authenticated user - DEMO MODE (no validation)."""
+    # For demo mode, return a mock admin user without token validation
+    # This allows frontend to work with mock tokens
 
-    if user_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    # Try to extract user info from mock token format: "mock-token-{username}"
+    if token and token.startswith("mock-token-"):
+        username = token.replace("mock-token-", "")
+        user = db.query(User).filter(User.username == username).first()
+        if user and user.is_active:
+            return user
 
-    user = db.query(User).filter(User.id == user_id).first()
-    if user is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found",
-        )
-
-    if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Inactive user",
+    # Default to admin user for demo
+    user = db.query(User).filter(User.username == "admin").first()
+    if not user:
+        # Create a temporary admin user if none exists
+        user = User(
+            id=1,
+            username="admin",
+            email="admin@perfo.ai",
+            full_name="Admin User",
+            role="admin",
+            is_active=True,
+            hashed_password=""
         )
 
     return user
