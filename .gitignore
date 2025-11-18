@@ -11,3 +11,12 @@ audit_log.cpython-311.pyc
 supplier.cpython-311.pyc
 __init__.cpython-311.pyc
 session.cpython-311.pyc
+approval_agent.cpython-311.pyc
+coding_agent.cpython-311.pyc
+invoice_processor.cpython-311.pyc
+ocr_agent.cpython-311.pyc
+state.cpython-311.pyc
+validation_agent.cpython-311.pyc    
+invoices.cpython-311.pyc
+suppliers.cpython-311.pyc
+users.cpython-311.pyc
