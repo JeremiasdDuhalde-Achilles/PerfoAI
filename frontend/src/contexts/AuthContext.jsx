@@ -28,16 +28,25 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await authAPI.login(username, password);
-      const { access_token } = response.data;
+      // Simulate login without backend validation
+      const mockUsers = {
+        'admin': { id: 1, username: 'admin', email: 'admin@perfo.ai', full_name: 'Admin User', role: 'admin', is_active: true },
+        'finance_manager': { id: 2, username: 'finance_manager', email: 'finance@perfo.ai', full_name: 'Finance Manager', role: 'finance_manager', is_active: true },
+        'approver': { id: 3, username: 'approver', email: 'approver@perfo.ai', full_name: 'Invoice Approver', role: 'approver', is_active: true },
+        'viewer': { id: 4, username: 'viewer', email: 'viewer@perfo.ai', full_name: 'Read Only User', role: 'viewer', is_active: true }
+      };
 
-      // Save token first
-      localStorage.setItem('token', access_token);
+      const userData = mockUsers[username];
 
-      // Get user info with explicit token header to avoid timing issues
-      const userResponse = await authAPI.getCurrentUser(access_token);
-      const userData = userResponse.data;
+      if (!userData) {
+        return {
+          success: false,
+          error: 'Invalid username',
+        };
+      }
 
+      // Save mock token and user data
+      localStorage.setItem('token', 'mock-token-' + username);
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
 
@@ -46,7 +55,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Login error:', error);
       return {
         success: false,
-        error: error.response?.data?.detail || 'Login failed',
+        error: 'Login failed',
       };
     }
   };
